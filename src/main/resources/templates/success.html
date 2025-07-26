@@ -1,0 +1,15 @@
+<!-- src/main/resources/templates/success.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>로그인 성공</title>
+</head>
+<body>
+<h2>로그인 성공!</h2>
+
+<p><strong>닉네임:</strong> <span th:text="${nickname}"></span></p>
+<p><strong>이메일:</strong> <span th:text="${email}"></span></p>
+<p><strong>JWT:</strong></p>
+<textarea rows="6" cols="80" th:text="${token}"></textarea>
+</body>
+</html>
