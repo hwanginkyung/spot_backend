@@ -7,6 +7,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import spot.backend.login.memberService.domain.KakaoMem;
@@ -19,11 +21,11 @@ import java.util.List;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
-    private final KakaoMemRepository memberRepository;
+    private final UserDetailsService userDetailsService;
 
-    public JwtAuthenticationFilter(JwtUtil jwtUtil, KakaoMemRepository memberRepository) {
+    public JwtAuthenticationFilter(JwtUtil jwtUtil, UserDetailsService userDetailsService) {
         this.jwtUtil = jwtUtil;
-        this.memberRepository = memberRepository;
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
@@ -31,24 +33,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        String authHeader = request.getHeader("Authorization");
+        String authorizationHeader = request.getHeader("Authorization");
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            String token = authHeader.replace("Bearer ", "");
-            try {
-                Claims claims = jwtUtil.parseToken(token);
-                Long userId = Long.parseLong(claims.getSubject());
-                KakaoMem member = memberRepository.findById(userId).orElse(null);
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            String token = authorizationHeader.substring(7);
+            if (jwtUtil.validateToken(token)) {
+                String username = jwtUtil.getUsername(token);
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-                if (member != null) {
-                    UsernamePasswordAuthenticationToken authentication =
-                            new UsernamePasswordAuthenticationToken(member, null, member.getAuthorities());
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                }
-            } catch (Exception e) {
-                // 토큰 파싱 실패시 무시 (401 따로 던지지 않음)
+                UsernamePasswordAuthenticationToken auth =
+                        new UsernamePasswordAuthenticationToken(
+                                userDetails, null, userDetails.getAuthorities());
+
+                SecurityContextHolder.getContext().setAuthentication(auth);
             }
         }
+        filterChain.doFilter(request, response);
 
         filterChain.doFilter(request, response);
     }

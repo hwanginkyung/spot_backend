@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -16,6 +17,10 @@ import spot.backend.login.memberService.dto.KakaoUserInfo;
 import spot.backend.login.memberService.dto.LoginResponseDto;
 import spot.backend.login.memberService.jwt.JwtUtil;
 import spot.backend.login.memberService.service.MemberService;
+
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 
 @RestController
@@ -41,16 +46,17 @@ public class KakaoLoginController {
     }
 
 
-    /*@GetMapping("/api/auth/kakao/login")
-    public void redirectToKakao(HttpServletResponse response) throws IOException {
+    @GetMapping("/api/auth/kakao/login")
+    public String redirectToKakao() {
         String kakaoUrl = "https://kauth.kakao.com/oauth/authorize?response_type=code"
                 + "&client_id=" + clientId
                 + "&redirect_uri=" + URLEncoder.encode(redirectUri, StandardCharsets.UTF_8);
-        response.sendRedirect(kakaoUrl);
-    }*/
+        return "redirect:" + kakaoUrl;
+    }
+
 
     @GetMapping("/api/auth/kakao/callback")
-    public ResponseEntity<LoginResponseDto> kakaoCallback(@RequestParam String code) {
+    public ResponseEntity<?> kakaoCallback(@RequestParam String code) {
         try {
             String accessToken = getAccessToken(code);
             String userInfoJson = getUserInfo(accessToken);
@@ -67,8 +73,9 @@ public class KakaoLoginController {
             return ResponseEntity.ok(new LoginResponseDto(token, member.getMail(), member.getNickname()));
 
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(null);
+                    .body("로그인 처리 중 오류가 발생했습니다: " + e.getMessage());
         }
     }
 
@@ -89,10 +96,14 @@ public class KakaoLoginController {
 
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.exchange(tokenUrl, HttpMethod.POST, request, String.class);
-
+        System.out.println("카카오 토큰 응답: " + response.getBody());
         try {
             JsonNode json = objectMapper.readTree(response.getBody());
-            return json.get("access_token").asText();
+            JsonNode accessTokenNode = json.get("access_token");
+            if (accessTokenNode == null) {
+                throw new RuntimeException("access_token 필드가 응답에 없습니다. 응답: " + response.getBody());
+            }
+            return accessTokenNode.asText();
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Kakao 토큰 JSON 파싱 실패", e);
         }

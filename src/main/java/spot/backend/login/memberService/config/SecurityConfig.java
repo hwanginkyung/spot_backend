@@ -15,6 +15,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import spot.backend.login.memberService.jwt.JwtAuthenticationFilter;
 
 
+
 import java.util.List;
 
 

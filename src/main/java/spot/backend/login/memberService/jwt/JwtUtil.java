@@ -1,6 +1,7 @@
 package spot.backend.login.memberService.jwt;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +32,18 @@ public class JwtUtil {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+    }
+    public String getUsername(String token) {
+        return parseToken(token).getSubject();
+    }
+
+    public boolean validateToken(String token) {
+        try {
+            parseToken(token);
+            return true;
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
+        }
     }
 
 }

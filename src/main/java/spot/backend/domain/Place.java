@@ -1,10 +1,14 @@
 package spot.backend.domain;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
 @Entity
+@Getter
+@Setter
 public class Place {
     @Id @GeneratedValue
     private long id;
@@ -14,8 +18,10 @@ public class Place {
     @Column(nullable = false)
     private String address;
     private String name;
-    @OneToMany(mappedBy = "placeid")
-    private List<SavedPlace> placeId;
+    private Double latitude;
+    private Double longitude;
+    @OneToMany(mappedBy = "place")
+    private List<SavedPlace> savedPlaces;
     @OneToMany(mappedBy = "placeid")
     private List<UrlPlace> urlPlaceId;
     @OneToMany(mappedBy = "placeid")

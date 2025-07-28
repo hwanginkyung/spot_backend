@@ -20,13 +20,13 @@ public class MemberService {
     public KakaoMem registerIfAbsent(KakaoUserInfo userInfo) {
         Optional<KakaoMem> existingUser = kakaoMemRepository.findByKakaoId(userInfo.id());
         System.out.println("조회된 사용자: " + existingUser);
-        int atIndex = userInfo.mail().indexOf("@");
-        String kakaoId = (atIndex != -1) ? userInfo.mail().substring(0, atIndex) : userInfo.mail();
+        int atIndex = userInfo.email().indexOf("@");
+        String kakaoId = (atIndex != -1) ? userInfo.email().substring(0, atIndex) : userInfo.email();
         return kakaoMemRepository.findByKakaoId(userInfo.id())
                 .orElseGet(() -> {
                     KakaoMem newUser = new KakaoMem();
                     newUser.setKakaoId(userInfo.id());
-                    newUser.setMail(userInfo.mail());
+                    newUser.setMail(userInfo.email());
                     newUser.setKakaoId(kakaoId);
                     newUser.setNickname(userInfo.nickname());
                     KakaoMem saved = kakaoMemRepository.save(newUser);
