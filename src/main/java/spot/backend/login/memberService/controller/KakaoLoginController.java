@@ -67,10 +67,10 @@ public class KakaoLoginController {
             KakaoMem member = memberService.registerIfAbsent(kakaoUser);
 
             // JWT 발급
-            String token = jwtUtil.createToken(String.valueOf(member.getId()));
+            String token = jwtUtil.createToken(member.getId());
 
             System.out.println(token);
-            return ResponseEntity.ok(new LoginResponseDto(token, member.getMail(), member.getNickname()));
+            return ResponseEntity.ok(new LoginResponseDto(token, member.getEmail(), member.getNickname()));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -113,7 +113,6 @@ public class KakaoLoginController {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(accessToken);
         HttpEntity<String> entity = new HttpEntity<>(headers);
-
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.exchange(
                 "https://kapi.kakao.com/v2/user/me",

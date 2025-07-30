@@ -17,9 +17,9 @@ public class JwtUtil {
 
     private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 24; // 1일
 
-    public String createToken(String email) {
+    public String createToken(Long id) {
         return Jwts.builder()
-                .setSubject(email)
+                .setSubject(String.valueOf(id))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(SignatureAlgorithm.HS512, secretKey.getBytes())
@@ -33,7 +33,7 @@ public class JwtUtil {
                 .parseClaimsJws(token)
                 .getBody();
     }
-    public String getUsername(String token) {
+    public String getId(String token) {
         return parseToken(token).getSubject();
     }
 

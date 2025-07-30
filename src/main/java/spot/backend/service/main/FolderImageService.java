@@ -1,18 +1,17 @@
-package spot.backend.service;
+package spot.backend.service.main;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import spot.backend.aws.s3.S3Service;
 import spot.backend.domain.Place;
 import spot.backend.domain.PlaceList;
-import spot.backend.dto.MainDto;
+import spot.backend.dto.main.MainDto;
 import spot.backend.login.memberService.domain.KakaoMem;
 import spot.backend.login.memberService.repository.KakaoMemRepository;
 import spot.backend.repository.PlaceRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor

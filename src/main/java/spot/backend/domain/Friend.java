@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import spot.backend.login.memberService.domain.KakaoMem;
 
 @Entity
-public class Friend {
+public class Friend extends BaseEntity{
     @Id
     @GeneratedValue
     private long id;

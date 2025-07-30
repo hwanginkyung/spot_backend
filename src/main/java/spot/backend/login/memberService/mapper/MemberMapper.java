@@ -7,7 +7,7 @@ import spot.backend.login.memberService.dto.SocialSignupRequestDto;
 public class MemberMapper {
     public static KakaoMem toEntity(SocialSignupRequestDto dto) {
         return KakaoMem.builder()
-                .mail(dto.getMail())
+                .email(dto.getEmail())
                 .nickname(dto.getNickname())
                 .build();
     }

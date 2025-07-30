@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-public class InstaUrl {
+public class InstaUrl extends BaseEntity{
 
     @Id
     @GeneratedValue

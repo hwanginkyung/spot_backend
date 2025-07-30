@@ -1,4 +1,4 @@
-package spot.backend.dto;
+package spot.backend.dto.main;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

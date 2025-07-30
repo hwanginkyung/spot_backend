@@ -5,7 +5,7 @@ import spot.backend.login.memberService.domain.KakaoMem;
 
 @Entity
 
-public class PlaceLike {
+public class PlaceLike extends BaseEntity{
     @Id
     @GeneratedValue
     private long id;

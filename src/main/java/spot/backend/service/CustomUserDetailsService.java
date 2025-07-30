@@ -21,10 +21,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 
         @Override
         public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-            KakaoMem user = userRepository.findByNickname(username)
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
-
-            return new CustomUserDetails(user);
+            try {
+                Long id = Long.parseLong(username);
+                KakaoMem user = userRepository.findById(id)
+                        .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + id));
+                return new CustomUserDetails(user);
+            } catch (NumberFormatException e) {
+                throw new UsernameNotFoundException("Invalid ID format: " + username);
+            }
         }
     }
 

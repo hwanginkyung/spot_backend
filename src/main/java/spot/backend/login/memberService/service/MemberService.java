@@ -18,7 +18,8 @@ public class MemberService {
     private final KakaoMemRepository kakaoMemRepository;
 
     public KakaoMem registerIfAbsent(KakaoUserInfo userInfo) {
-        Optional<KakaoMem> existingUser = kakaoMemRepository.findByKakaoId(userInfo.id());
+        Long ids= Long.valueOf(userInfo.id());
+        Optional<KakaoMem> existingUser = kakaoMemRepository.findById(ids);
         System.out.println("조회된 사용자: " + existingUser);
         int atIndex = userInfo.email().indexOf("@");
         String kakaoId = (atIndex != -1) ? userInfo.email().substring(0, atIndex) : userInfo.email();
@@ -26,7 +27,7 @@ public class MemberService {
                 .orElseGet(() -> {
                     KakaoMem newUser = new KakaoMem();
                     newUser.setKakaoId(userInfo.id());
-                    newUser.setMail(userInfo.email());
+                    newUser.setEmail(userInfo.email());
                     newUser.setKakaoId(kakaoId);
                     newUser.setNickname(userInfo.nickname());
                     KakaoMem saved = kakaoMemRepository.save(newUser);

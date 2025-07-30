@@ -3,7 +3,7 @@ package spot.backend.domain;
 import jakarta.persistence.*;
 
 @Entity
-public class UrlPlace {
+public class UrlPlace extends BaseEntity{
     @Id @GeneratedValue
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)

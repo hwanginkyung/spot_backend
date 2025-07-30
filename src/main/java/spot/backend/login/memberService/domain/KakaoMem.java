@@ -27,7 +27,7 @@ public class KakaoMem extends BaseEntity {
     @Column(nullable = false)
     private String kakaoId;
     @Column(nullable = false)
-    private String mail;
+    private String email;
     @Column(nullable = false)
     private String nickname;
     private String password;

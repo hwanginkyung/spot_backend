@@ -9,5 +9,6 @@ import java.util.Optional;
 
 public interface KakaoMemRepository extends JpaRepository<KakaoMem, Long> {
     Optional<KakaoMem> findByKakaoId(String kakaoId);
+    Optional<KakaoMem> findById(Long Id);
     Optional<KakaoMem> findByNickname(String nickname);
 }

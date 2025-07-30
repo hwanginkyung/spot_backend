@@ -11,15 +11,12 @@ import java.util.List;
 public class CustomUserDetails implements UserDetails {
 
         private final KakaoMem user;
-
         public CustomUserDetails(KakaoMem user) {
             this.user = user;
         }
-
         public Long getId() {
             return user.getId();
         }
-
         public KakaoMem getUser() {
             return user;
         }

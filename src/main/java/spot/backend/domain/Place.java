@@ -9,7 +9,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-public class Place {
+public class Place extends BaseEntity {
     @Id @GeneratedValue
     private long id;
     @Enumerated(EnumType.STRING)
@@ -20,6 +20,8 @@ public class Place {
     private String name;
     private Double latitude;
     private Double longitude;
+    private Double ratingAvg;
+    private int ratingCount;
     @OneToMany(mappedBy = "place")
     private List<SavedPlace> savedPlaces;
     @OneToMany(mappedBy = "placeid")

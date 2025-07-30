@@ -11,12 +11,12 @@ import spot.backend.login.memberService.oauth.naver.NaverUserResponse;
 public class SocialSignupRequestDto {
     private String provider;     // "kakao", "naver"
     private String providerId;   // 외부 서비스의 유저 ID
-    private String mail;
+    private String email;
     private String nickname;
 
     public KakaoMem toEntity() {
         return KakaoMem.builder()
-                .mail(mail)
+                .email(email)
                 .nickname(nickname)
                 .build();
     }
