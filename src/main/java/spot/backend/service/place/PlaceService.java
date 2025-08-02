@@ -22,6 +22,7 @@ public class PlaceService {
     private final PlaceRepository placeRepository;
     private final KakaoMemRepository kakaoMemRepository;
     private final SavedPlaceRepository savedPlaceRepository;
+
     @Transactional
     public PlaceDetailDto getPlaceDetail(Long placeId, Long userId) {
         Place place = placeRepository.findById(placeId)
@@ -30,8 +31,8 @@ public class PlaceService {
         // 기본 정보
         String name = place.getName();
         String address = place.getAddress();
-        double lat = place.getLatitude();
-        double lng = place.getLongitude();
+        double lat =roundTo2Decimals(place.getLatitude());
+        double lng = roundTo2Decimals(place.getLongitude());
         PlaceList list = place.getList();
         String photo = place.getPhoto();
 
@@ -57,6 +58,24 @@ public class PlaceService {
                 place.getId(), name, address, lat, lng, list, photo,
                 ratingAvg, ratingCount, myRating, saverDtos
         );
+    }
+    public Place findOrCreatePlace(String name, double lat, double lng) {
+        double roundedLat = roundTo2Decimals(lat);
+        double roundedLng = roundTo2Decimals(lng);
+
+        return placeRepository.findByLatitudeAndLongitude(roundedLat, roundedLng)
+                .orElseGet(() -> {
+                    Place place = new Place();
+                    place.setName(name);
+                    place.setLatitude(roundedLat);
+                    place.setLongitude(roundedLng);
+                    // 기타 필드 초기화
+                    return placeRepository.save(place);
+                });
+    }
+
+    private double roundTo2Decimals(double value) {
+        return Math.round(value * 100) / 100.0;
     }
 
 }

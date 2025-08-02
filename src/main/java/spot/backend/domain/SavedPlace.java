@@ -21,7 +21,7 @@ public class SavedPlace extends BaseEntity{
     private Place place;
     @ManyToOne(fetch = FetchType.LAZY)
     private KakaoMem user;
-    private Integer rating;
+    private Integer rating=0;
     public void updateRating(Integer rating) {
         this.rating = rating;
     }

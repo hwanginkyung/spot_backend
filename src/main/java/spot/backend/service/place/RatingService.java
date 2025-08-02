@@ -32,16 +32,27 @@ public class RatingService {
         Optional<SavedPlace> existing = savedPlaceRepository.findByUserAndPlace(user, place);
         int newScore = request.rating();
         if (existing.isPresent()) {
-            SavedPlace rating = existing.get();
-            int oldScore = rating.getRating();
-            rating.updateRating(newScore);
+            if (existing.get().getRating() != 0) {
+                SavedPlace rating = existing.get();
+                int oldScore = rating.getRating();
+                rating.updateRating(newScore);
 
-            // 별점 평균 갱신 (수정)
-            double newAverage = (place.getRatingAvg() * place.getRatingCount()
-                    - oldScore + newScore) / place.getRatingCount();
-            place.setRatingAvg(newAverage);
+                // 별점 평균 갱신 (수정)
+                double newAverage = (place.getRatingAvg() * place.getRatingCount()
+                        - oldScore + newScore) / place.getRatingCount();
+                place.setRatingAvg(newAverage);
+            }
+            else{
+                SavedPlace rating = existing.get();
+                rating.updateRating(newScore);
+                double newAverage = (place.getRatingAvg() * place.getRatingCount() + newScore)
+                        / (place.getRatingCount() + 1);
+                place.setRatingAvg(newAverage);
+                place.setRatingCount(place.getRatingCount() + 1);
+            }
 
-        } else {
+        }
+            else {
             // 새 별점 등록
             SavedPlace rating = new SavedPlace(user, place, newScore);
             savedPlaceRepository.save(rating);
@@ -72,7 +83,6 @@ public class RatingService {
         int newCount = place.getRatingCount() - 1;
         double newAvg = newCount == 0 ? 0.0 :
                 (place.getRatingAvg() * place.getRatingCount() - oldRating) / newCount;
-
         place.setRatingCount(newCount);
         place.setRatingAvg(newAvg);
     }

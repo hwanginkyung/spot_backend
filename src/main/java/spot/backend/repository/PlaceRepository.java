@@ -7,6 +7,7 @@ import spot.backend.domain.Place;
 import spot.backend.dto.main.MapDto;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PlaceRepository extends JpaRepository<Place, Long> {
     @Query("select up.place from SavedPlace up where up.user.id = :userId")
@@ -24,5 +25,5 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
             @Param("latitude") double latitude,
             @Param("longitude") double longitude,
             @Param("radius") double radius);
-
+    Optional<Place> findByLatitudeAndLongitude(double latitude, double longitude);
 }

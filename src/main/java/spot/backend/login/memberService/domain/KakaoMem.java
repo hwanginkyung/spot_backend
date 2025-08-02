@@ -40,7 +40,7 @@ public class KakaoMem extends BaseEntity {
     @OneToMany(mappedBy = "friend_userid")
     @JsonIgnore
     private List<Friend> friendUserid;
-    @OneToMany(mappedBy = "userid")
+    @OneToMany(mappedBy = "user")
     private List<SavedPlace> placeUserid;
     @OneToMany(mappedBy = "userid")
     private List<PlaceLike> placeLike;

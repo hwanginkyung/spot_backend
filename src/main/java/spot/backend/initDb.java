@@ -10,6 +10,7 @@ import spot.backend.domain.PlaceList;
 import spot.backend.domain.SavedPlace;
 import spot.backend.login.memberService.domain.KakaoMem;
 import spot.backend.login.memberService.repository.KakaoMemRepository;
+import spot.backend.repository.PlaceRepository;
 import spot.backend.repository.SavedPlaceRepository;
 
 @Component
@@ -19,12 +20,12 @@ import spot.backend.repository.SavedPlaceRepository;
         private final InitService initService;
         private final KakaoMemRepository memberRepository;
     private final SavedPlaceRepository savedPlaceRepository;
-
+    private final PlaceRepository placeRepository;
     @PostConstruct
         public void init() {
         savedPlaceRepository.deleteAll();
         memberRepository.deleteAll();
-
+        placeRepository.deleteAll();
             initService.dbInit2();
         }
         @Component
@@ -41,8 +42,8 @@ import spot.backend.repository.SavedPlaceRepository;
                 Place place = new Place();
                 place.setList(PlaceList.cafe);
                 place.setAddress("test");
-                place.setLatitude(10.0);
-                place.setLongitude(10.0);
+                place.setLatitude(10.00);
+                place.setLongitude(10.00);
                 em.persist(place);
                 SavedPlace tests = new SavedPlace(member, place, 5);
                 em.persist(tests);
