@@ -18,6 +18,13 @@ configurations {
 		extendsFrom annotationProcessor
 	}
 }
+jar {
+	enabled = true
+}
+bootJar {
+	archiveFileName = 'app.jar'
+	enabled = true
+}
 
 repositories {
 	mavenCentral()
@@ -43,6 +50,7 @@ dependencies {
 	implementation "software.amazon.awssdk:s3"
 	implementation "software.amazon.awssdk:auth"
 	implementation 'org.apache.commons:commons-lang3:3.13.0'
+
 
 }
 
