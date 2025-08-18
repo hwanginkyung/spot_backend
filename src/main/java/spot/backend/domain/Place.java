@@ -19,6 +19,9 @@ public class Place extends BaseEntity {
     private String name;
     private Double latitude;
     private Double longitude;
+    private int savedCount;      // 북마크 수
+    private int searchCount;     // DB 검색 수
+    private double score;
     @Column(nullable = false)
     private Double ratingAvg = 0.00;
     @Column(nullable = false)

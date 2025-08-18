@@ -26,4 +26,47 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
             @Param("longitude") double longitude,
             @Param("radius") double radius);
     Optional<Place> findByLatitudeAndLongitude(double latitude, double longitude);
+
+    @Query(value = """
+    SELECT 
+        p.photo_url AS photoUrl,
+        p.name AS name,
+        p.address AS address,
+        p.rating AS rating,
+        p.category AS category,
+        (6371 * acos(
+            cos(radians(:lat)) * cos(radians(p.latitude)) *
+            cos(radians(p.longitude) - radians(:lon)) +
+            sin(radians(:lat)) * sin(radians(p.latitude))
+        )) AS distance,
+        sp.saved_at AS savedAt
+    FROM saved_places sp
+    JOIN places p ON sp.place_id = p.id
+    WHERE sp.user_id = :userId
+    ORDER BY distance ASC
+""", nativeQuery = true)
+    List<Object[]> findPlacesByUserOrderByDistance(
+            @Param("userId") Long userId,
+            @Param("lat") double lat,
+            @Param("lon") double lon
+    );
+
+    @Query(value = """
+    SELECT 
+        p.photo_url AS photoUrl,
+        p.name AS name,
+        p.address AS address,
+        p.rating AS rating,
+        p.category AS category,
+        NULL AS distance,
+        sp.saved_at AS savedAt
+    FROM saved_places sp
+    JOIN places p ON sp.place_id = p.id
+    WHERE sp.user_id = :userId
+    ORDER BY sp.saved_at DESC
+""", nativeQuery = true)
+    List<Object[]> findPlacesByUserOrderByLatest(
+            @Param("userId") Long userId
+    );
+
 }

@@ -31,6 +31,7 @@ public class KakaoMem extends BaseEntity {
     @Column(nullable = false)
     private String nickname;
     private String password;
+    private String spotNickname;
     @Column(columnDefinition = "TEXT")
     private String info;
     private String photo; //S3에 저장된 사진 URL

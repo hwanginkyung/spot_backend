@@ -1,10 +1,7 @@
 package spot.backend.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import spot.backend.login.memberService.domain.KakaoMem;
 
 import java.time.LocalDateTime;
@@ -12,6 +9,8 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SavedPlace extends BaseEntity{
     @Id @GeneratedValue
@@ -22,6 +21,8 @@ public class SavedPlace extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     private KakaoMem user;
     private Integer rating=0;
+    @Column(nullable = false)
+    private String saveType = "SPOT";
     public void updateRating(Integer rating) {
         this.rating = rating;
     }

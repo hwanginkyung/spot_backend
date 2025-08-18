@@ -34,8 +34,8 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**","/v3/api-docs/**","/swagger-ui/**",
-                                "/swagger-ui.html","/api/auth/kakao/**", "/login/**", "/css/**", "/js/**","/login").permitAll()
+                        .requestMatchers("/api/auth/**","/v3/api-docs/**","/swagger-ui/**","/my",
+                                "/swagger-ui.html","/api/auth/kakao/**", "/login/**", "/css/**", "/js/**","/login","/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
@@ -48,7 +48,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:3000","http://localhost:8080","http://172.30.1.23:8081","https://*.ngrok-free.app"));
+        config.setAllowedOrigins(List.of("http://3.39.241.53:8080/","http://localhost:3000","http://localhost:8080","http://172.30.1.23:8081","https://*.ngrok-free.app"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);

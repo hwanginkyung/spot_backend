@@ -5,10 +5,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import spot.backend.aws.s3.S3Service;
+import spot.backend.domain.SavedPlace;
 import spot.backend.dto.CustomUserDetails;
 import spot.backend.dto.main.MainDto;
 import spot.backend.dto.main.MapDto;
 import spot.backend.dto.main.MapFinalDto;
+import spot.backend.dto.place.PopularDto;
+import spot.backend.dto.place.SavedPlaceDto;
 import spot.backend.repository.PlaceRepository;
 import spot.backend.service.main.FolderImageService;
 import spot.backend.service.main.SavedPlaceService;
@@ -45,4 +48,11 @@ public class HomeController {
         return ResponseEntity.ok("place saved");
     }
 
+    @GetMapping("/main/polular")
+    public List<PopularDto> getPopularPlaces(
+            @AuthenticationPrincipal CustomUserDetails user,
+            @RequestParam double lat,
+            @RequestParam double lng) {
+        return savedPlaceService.getPopularPlacesByDistance(user.getId(), lat, lng);
+    }
 }
