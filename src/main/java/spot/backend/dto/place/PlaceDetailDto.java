@@ -1,9 +1,11 @@
 package spot.backend.dto.place;
 
+import lombok.Getter;
 import spot.backend.domain.PlaceList;
 
 import java.util.List;
 
+@Getter
 public record PlaceDetailDto (
     Long placeId,
     String name,

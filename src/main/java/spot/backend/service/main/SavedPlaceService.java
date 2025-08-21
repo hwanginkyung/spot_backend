@@ -83,14 +83,8 @@ public class SavedPlaceService {
 
             boolean marked = savedPlaceRepository.existsByUserIdAndPlace(userId, place);
 
-            int bookmarkDelta = scoreRedisService.getBookmarkDelta(place.getId());
-            int searchDelta = scoreRedisService.getSearchDelta(place.getId());
-            double ratingDelta = scoreRedisService.getRatingDelta(place.getId());
-
-            int totalSavedCount = place.getSavedCount() + bookmarkDelta;
-            int totalSearchCount = place.getSearchCount() + searchDelta;
-            double score = (place.getRatingCount() + ratingDelta) * 10 + (totalSavedCount / 10.0) + (totalSearchCount / 15.0);
-
+            double score= calculateScore(place);
+            place.setScore(score);
             // photos는 필요에 따라 조회/매핑
             List<String> photos = getPhotoUrls(place.getId());
 

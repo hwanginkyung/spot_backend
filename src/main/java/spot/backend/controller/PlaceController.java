@@ -10,9 +10,11 @@ import spot.backend.dto.place.PlaceDetailDto;
 import spot.backend.dto.place.PopularDto;
 import spot.backend.dto.place.RatingDto;
 import spot.backend.dto.place.SavedPlaceDto;
+import spot.backend.search.service.RecentSearchService;
 import spot.backend.service.main.SavedPlaceService;
 import spot.backend.service.place.PlaceService;
 import spot.backend.service.place.RatingService;
+import spot.backend.service.score.ScoreRedisService;
 
 import java.util.List;
 
@@ -23,6 +25,8 @@ public class PlaceController {
     private final RatingService ratingService;
     private final PlaceService placeService;
     private final SavedPlaceService savedPlaceService;
+    private final RecentSearchService recentSearchService;
+    private final ScoreRedisService scoreRedisService;
     @PostMapping("/places/ratings")
     public ResponseEntity<String> addRating(@AuthenticationPrincipal CustomUserDetails user,
                                             @RequestBody @Valid RatingDto request){
@@ -38,9 +42,18 @@ public class PlaceController {
     @GetMapping("/places/{place_id}")
     public ResponseEntity<PlaceDetailDto> placesDetail(@AuthenticationPrincipal CustomUserDetails user,
                                                        @PathVariable long place_id ){
-
         Long userId = user.getId();
         return ResponseEntity.ok(placeService.getPlaceDetail(place_id, userId));
+    }
+    @GetMapping("/search/places/{place_id}")
+    public ResponseEntity<PlaceDetailDto> placesDetailFromSearch(@AuthenticationPrincipal CustomUserDetails user,
+                                                       @PathVariable long place_id ){
+        Long userId = user.getId();
+        PlaceDetailDto placeDetailDto= placeService.getPlaceDetail(place_id, userId);
+        recentSearchService.saveKeyword(userId,placeDetailDto.name(),1);
+        scoreRedisService.incrementSearchDelta(placeDetailDto.placeId(),1);
+
+        return ResponseEntity.ok(placeDetailDto);
     }
     /*@GetMapping("/my")
     public List<SavedPlaceDto> getPlaces(

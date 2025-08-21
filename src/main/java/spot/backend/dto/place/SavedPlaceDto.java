@@ -2,7 +2,6 @@ package spot.backend.dto.place;
 
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter

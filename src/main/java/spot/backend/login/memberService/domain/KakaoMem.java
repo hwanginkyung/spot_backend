@@ -5,10 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import spot.backend.domain.BaseEntity;
-import spot.backend.domain.Friend;
-import spot.backend.domain.PlaceLike;
-import spot.backend.domain.SavedPlace;
+import spot.backend.domain.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,5 +42,7 @@ public class KakaoMem extends BaseEntity {
     private List<SavedPlace> placeUserid;
     @OneToMany(mappedBy = "userid")
     private List<PlaceLike> placeLike;
+    @OneToMany(mappedBy = "kakaoMem")
+    private List<RecentSearch> recentSearch;
 
 }
