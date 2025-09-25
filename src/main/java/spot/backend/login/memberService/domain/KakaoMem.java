@@ -32,17 +32,17 @@ public class KakaoMem extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String info;
     private String photo; //S3에 저장된 사진 URL
-    @OneToMany(mappedBy = "userid")
-    @JsonIgnore
-    private List<Friend> userid;
-    @OneToMany(mappedBy = "friend_userid")
-    @JsonIgnore
-    private List<Friend> friendUserid;
     @OneToMany(mappedBy = "user")
     private List<SavedPlace> placeUserid;
     @OneToMany(mappedBy = "userid")
     private List<PlaceLike> placeLike;
     @OneToMany(mappedBy = "kakaoMem")
     private List<RecentSearch> recentSearch;
+
+    @OneToMany(mappedBy = "member")
+    private List<Friend> friends = new ArrayList<>();
+    // 친구 관계: 나를 친구로 등록한 목록 (상대방이 나를 친구로 등록)
+    @OneToMany(mappedBy = "friend")
+    private List<Friend> followers = new ArrayList<>();
 
 }

@@ -26,7 +26,7 @@ public class PopularDto {
         this.name = place.getName();
         this.address = place.getAddress();
         this.rating = place.getRatingAvg();
-        this.category = place.getList().name();
+        this.category = place.getList();
         this.distance = distance;
         this.isMarked = isMarked;
         this.savedCount = place.getSavedCount();

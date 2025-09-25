@@ -19,4 +19,6 @@ public interface SavedPlaceRepository extends JpaRepository<SavedPlace, Long> {
     Long countByPlaceId(@Param("placeId") Long placeId);
     boolean existsByUserIdAndPlace(Long userId, Place place);
     void deleteByUserIdAndPlaceId(Long userId, Long placeId);
+    List<SavedPlace> findByUserIdIn(List<Long> userIds);
+
 }

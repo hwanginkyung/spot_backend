@@ -35,7 +35,7 @@ public class GooglePlaceController {
         String placeId = null;
         // 1. 장소 이름 + 위치로 place_id
         try {
-            placeId = googlePlaceService.searchPlaceIdByNameAndLocation(name, lat, lng);
+            placeId = googlePlaceService.searchPlaceIdByNameAndLocation(name, lat, lng,500);
             // 이후 처리
         } catch (IllegalStateException e) {
             log.error("Google Place ID 검색 실패: {}", e.getMessage());
@@ -56,7 +56,7 @@ public class GooglePlaceController {
 
             // 4. S3 업로드
             String filename =  UUID.randomUUID() + ".jpg";
-            String imageUrl = s3Upload.upload(photoBytes, place.getId()+"/"+filename, "image/jpeg");
+            String imageUrl = s3Upload.upload(photoBytes, place.getGid()+"/"+filename, "image/jpeg");
             imageUrls.add(imageUrl);
         }
 

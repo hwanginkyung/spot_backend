@@ -1,58 +1,41 @@
 package spot.backend.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
-import spot.backend.aws.s3.S3Service;
-import spot.backend.domain.SavedPlace;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import spot.backend.dto.CustomUserDetails;
-import spot.backend.dto.main.MainDto;
-import spot.backend.dto.main.MapDto;
-import spot.backend.dto.main.MapFinalDto;
-import spot.backend.dto.place.PopularDto;
-import spot.backend.dto.place.SavedPlaceDto;
-import spot.backend.repository.PlaceRepository;
-import spot.backend.service.main.FolderImageService;
-import spot.backend.service.main.SavedPlaceService;
-
+import spot.backend.dto.main.FriendDto;
+import spot.backend.dto.main.HomeDto;
+import spot.backend.dto.main.PlaceDto;
+import spot.backend.service.main.FriendClickService;
+import spot.backend.service.main.FriendService;
+import spot.backend.service.place.PlaceService;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 public class HomeController {
-    private final S3Service s3Service;
-    private final FolderImageService folderImageService;
-    private final PlaceRepository placeRepository;
-    private final SavedPlaceService savedPlaceService;
-
+    //친구 최대 10명,
+    private final FriendService friendService;
+    private final PlaceService placeService;
+    private final FriendClickService friendClickService;
     @GetMapping("/main")
-    public ResponseEntity<MapFinalDto> getMyFoldersFull(@AuthenticationPrincipal CustomUserDetails user,
-                                                          @RequestParam double latitude,
-                                                          @RequestParam double longitude,
-                                                          @RequestParam(defaultValue = "1000") int radius) {
+    public HomeDto main(@AuthenticationPrincipal CustomUserDetails user,
+                        @RequestParam double distance,
+                        @RequestParam double lat,
+                        @RequestParam double lng
+                        ) {
         Long userId = user.getId();
-        List<MainDto> response = folderImageService.getUserFoldersImages(userId);
 
-        List<MapDto> nearbyPlaces = placeRepository.findNearbyPlaces(userId, latitude, longitude, radius);
+        // 1. 최근 클릭한 친구 5명 가져오기
+        List<Long> allFriendIds = friendService.getFriendIds(userId);
+        List<FriendDto> friends = friendClickService.getTop5Friends(userId, allFriendIds);
 
-        MapFinalDto answer= new MapFinalDto(response, nearbyPlaces);
-
-        return ResponseEntity.ok(answer);
-    }
-    @PostMapping("/main/bookmark/{placeId}")
-    public ResponseEntity<String> addSavedPlace(@AuthenticationPrincipal CustomUserDetails user,
-                                              @PathVariable Long placeId) {
-        savedPlaceService.addSavedPlace(user.getId(), placeId);
-        return ResponseEntity.ok("place saved");
-    }
-
-    @GetMapping("/main/polular")
-    public List<PopularDto> getPopularPlaces(
-            @AuthenticationPrincipal CustomUserDetails user,
-            @RequestParam double lat,
-            @RequestParam double lng) {
-        return savedPlaceService.getPopularPlacesByDistance(user.getId(), lat, lng);
+        // 2. 주변 장소 가져오기
+        List<PlaceDto> places = placeService.findPlacesNearbyWithFriends(userId,lat, lng, distance);
+        return new HomeDto(friends,places);
     }
 }

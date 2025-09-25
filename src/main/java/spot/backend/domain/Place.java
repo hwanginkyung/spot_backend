@@ -1,19 +1,21 @@
 package spot.backend.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
 @Entity
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED) // <- 필수
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
 public class Place extends BaseEntity {
     @Id @GeneratedValue
     private long id;
-    @Enumerated(EnumType.STRING)
-    private PlaceList list;
+    private String list;
+    private String gid;
     private String photo; //S3에 저장된 사진 URL
     private String address;
     private String name;
@@ -32,4 +34,7 @@ public class Place extends BaseEntity {
     private List<UrlPlace> urlPlaceId;
     @OneToMany(mappedBy = "placeid")
     private List<PlaceLike> placeLike;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "area_id")
+    private PlaceArea area;
 }

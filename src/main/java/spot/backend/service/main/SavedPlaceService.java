@@ -68,7 +68,7 @@ public class SavedPlaceService {
                         sp.getPlace().getName(),
                         sp.getPlace().getAddress(),
                         sp.getPlace().getRatingAvg(),
-                        sp.getPlace().getList().name(),
+                        sp.getPlace().getList(),
                         savedPlaceRepository.countByPlaceId(sp.getPlace().getId())
                 ))
                 .collect(Collectors.toList());

@@ -18,15 +18,22 @@ import java.util.Map;
 public class SearchController {
     private final RecentSearchService recentSearchService;
     private final SearchService searchService;
-    @PostMapping("/search")
+    @PostMapping("/searchs")
     public Mono<String> search(@RequestBody Map<String, String> body,@AuthenticationPrincipal CustomUserDetails user) {
         String query = body.get("query");
         recentSearchService.saveKeyword(user.getId(), query,0);
         return searchService.search(query);
     }
     @GetMapping("/recent")
-    public ResponseEntity<List<RecentSearchDto>> recentSearches(@RequestParam Long userId) {
-        List<RecentSearchDto> recent = recentSearchService.getRecentSearches(userId);
+    public ResponseEntity<List<RecentSearchDto>> recentSearches(@AuthenticationPrincipal CustomUserDetails user) {
+        List<RecentSearchDto> recent = recentSearchService.getRecentSearches(user.getId());
         return ResponseEntity.ok(recent);
     }
+    @DeleteMapping("/recent/{keyword}")
+    public ResponseEntity<String> deleteRecentSearch(@AuthenticationPrincipal CustomUserDetails user,
+                                                     @PathVariable String keyword) {
+        recentSearchService.deleteRecentSearch(user.getId(), keyword);
+        return ResponseEntity.ok("최근 검색어 삭제됨");
+    }
+
 }

@@ -16,7 +16,6 @@ public class RecentSearch extends BaseEntity {
     private String keyword;
     @ManyToOne(fetch = FetchType.LAZY)
     private KakaoMem kakaoMem;
-
     public RecentSearch(int pin, String kw, KakaoMem user) {
         this.pin = pin;
         this.keyword = kw;

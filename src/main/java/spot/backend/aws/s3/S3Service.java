@@ -30,4 +30,11 @@ import java.util.stream.Collectors;
                 .map(S3Object::key)
                 .collect(Collectors.toList());
     }
+    public String buildS3ProfileUrl(String profileImageId) {
+        return String.format("https://%s.s3.amazonaws.com/%s", bucketName, profileImageId);
+    }
+    public String buildS3PlaceUrl(String photoId) {
+        return String.format("https://%s.s3.amazonaws.com/%s", bucketName, photoId);
+    }
+
 }

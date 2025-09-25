@@ -30,6 +30,24 @@ public class RecentSearchService {
         redisTemplate.opsForList().trim(key, 0, 9);
     }
 
+    public void deleteRecentSearch(Long userId, String keyword) {
+        String key = KEY_PREFIX + userId;
+
+        // Redis 리스트에서 전체 값 가져오기
+        List<String> values = redisTemplate.opsForList().range(key, 0, -1);
+        if (values != null) {
+            for (String v : values) {
+                String[] parts = v.split("\\|");
+                String savedKeyword = parts[0];
+
+                if (savedKeyword.equals(keyword)) {
+                    // 해당 value 전체("keyword|pin") 삭제
+                    redisTemplate.opsForList().remove(key, 1, v);
+                    break; // 첫 번째 매칭 항목만 삭제
+                }
+            }
+        }
+    }
     public List<RecentSearchDto> getRecentSearches(Long userId) {
         String key = KEY_PREFIX + userId;
         List<String> values = redisTemplate.opsForList().range(key, 0, -1);

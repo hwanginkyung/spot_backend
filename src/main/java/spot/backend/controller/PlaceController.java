@@ -52,7 +52,6 @@ public class PlaceController {
         PlaceDetailDto placeDetailDto= placeService.getPlaceDetail(place_id, userId);
         recentSearchService.saveKeyword(userId,placeDetailDto.name(),1);
         scoreRedisService.incrementSearchDelta(placeDetailDto.placeId(),1);
-
         return ResponseEntity.ok(placeDetailDto);
     }
     /*@GetMapping("/my")

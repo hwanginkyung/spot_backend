@@ -10,8 +10,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PlaceRepository extends JpaRepository<Place, Long> {
+    Optional<Place> findByGid(String gId);
     @Query("select up.place from SavedPlace up where up.user.id = :userId")
     List<Place> findFolderNamesByUserId(@Param("userId") Long userId);
+
 
     @Query(value = "SELECT p.name, p.list, p.latitude, p.longitude, " +
             "(6371 * acos(cos(radians(:latitude)) * cos(radians(p.latitude)) * cos(radians(p.longitude) - radians(:longitude)) + sin(radians(:latitude)) * sin(radians(p.latitude)))) AS distance " +

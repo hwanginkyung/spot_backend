@@ -28,8 +28,8 @@ public class FolderImageService {
         List<MainDto> result = new ArrayList<>();
         // 3. 각 장소의 폴더명을 이용해 S3 이미지 키 조회
         for (Place place : places) {
-            String folder = place.getAddress();
-            PlaceList list = place.getList();
+            String folder = place.getGid();
+            String list = place.getList();
             List<String> images = s3Service.getImageKeysInFolder(folder);
             MainDto dto = new MainDto(
                     folder,

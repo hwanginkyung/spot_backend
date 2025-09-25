@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 public class MainDto {
     private String folder;
-    private PlaceList list;
+    private String list;
     private int like;
     private List<String> images;
 }
