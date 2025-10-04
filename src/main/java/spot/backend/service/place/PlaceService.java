@@ -13,6 +13,7 @@ import spot.backend.dto.place.PlaceDetailDto;
 import spot.backend.dto.place.PlaceSaverDto;
 import spot.backend.login.memberService.domain.KakaoMem;
 import spot.backend.login.memberService.repository.KakaoMemRepository;
+import spot.backend.repository.ActivityRepository;
 import spot.backend.repository.PlaceAreaRepository;
 import spot.backend.repository.PlaceRepository;
 import spot.backend.repository.SavedPlaceRepository;

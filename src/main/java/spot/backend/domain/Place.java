@@ -22,7 +22,7 @@ public class Place extends BaseEntity {
     private Double latitude;
     private Double longitude;
     private int savedCount;      // 북마크 수
-    private int searchCount;     // DB 검색 수
+    private int searchCount;     // DB 검색 수e
     private double score;
     @Column(nullable = false)
     private Double ratingAvg = 0.00;
@@ -37,4 +37,6 @@ public class Place extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "area_id")
     private PlaceArea area;
+    @OneToMany(mappedBy= "place")
+    private List<Comment> comment;
 }

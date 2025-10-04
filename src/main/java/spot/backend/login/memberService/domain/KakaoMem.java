@@ -44,5 +44,7 @@ public class KakaoMem extends BaseEntity {
     // 친구 관계: 나를 친구로 등록한 목록 (상대방이 나를 친구로 등록)
     @OneToMany(mappedBy = "friend")
     private List<Friend> followers = new ArrayList<>();
+    @OneToMany(mappedBy= "kakaoMem")
+    private List<Comment> comment;
 
 }
