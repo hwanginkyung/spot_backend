@@ -10,14 +10,15 @@ public class Friend extends BaseEntity{
     @Id
     @GeneratedValue
     private long id;
-    private Long userid;
-    private Long friendid;
+
     @Enumerated(EnumType.STRING)
     private FriendStatus status;
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private KakaoMem member;
-    @ManyToOne
+    private KakaoMem member; // 나
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "friend_id")
-    private KakaoMem friend;
+    private KakaoMem friend; // 친구
 }

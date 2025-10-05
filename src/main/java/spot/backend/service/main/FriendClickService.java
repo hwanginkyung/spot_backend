@@ -42,7 +42,11 @@ public class FriendClickService {
      * 내가 자주 클릭한 TOP 5 친구 불러오기
      */
     @Transactional(readOnly = true)
-    public List<FriendDto> getTop5Friends(Long userId, List<Long> allFriendIds) {
+    public List<FriendDto> getTop5Friends(Long userId, List<KakaoMem> alFriendIds) {
+
+        List<Long> allFriendIds = alFriendIds.stream()
+                .map(KakaoMem::getId)   // KakaoMem 객체에서 id만 추출
+                .collect(Collectors.toList());
         List<FriendClickCount> topClicks = friendClickCountRepository.findTopFriends(
                 userId, allFriendIds, PageRequest.of(0, 5));
 

@@ -1,19 +1,18 @@
 package spot.backend.controller;
 
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import spot.backend.domain.Place;
 import spot.backend.dto.CustomUserDetails;
-import spot.backend.dto.main.FriendDto;
-import spot.backend.dto.main.HomeDto;
-import spot.backend.dto.main.HomePlaceDto;
-import spot.backend.dto.main.PlaceDto;
-import spot.backend.repository.PlaceRepository;
+import spot.backend.dto.main.*;
+import spot.backend.login.memberService.domain.KakaoMem;
+import spot.backend.login.memberService.repository.KakaoMemRepository;
 import spot.backend.service.main.FriendClickService;
 import spot.backend.service.main.FriendService;
+import spot.backend.service.place.MainCommentService;
 import spot.backend.service.place.MainPlaceService;
 import spot.backend.service.place.PlaceService;
 
@@ -26,8 +25,9 @@ public class HomeController {
     private final FriendService friendService;
     private final PlaceService placeService;
     private final FriendClickService friendClickService;
-    private final PlaceRepository placeRepository;
+    private final KakaoMemRepository kakaoMemRepository;
     private final MainPlaceService mainPlaceService;
+    private final MainCommentService mainCommentService;
     @GetMapping("/main")
     public HomeDto mains(@AuthenticationPrincipal CustomUserDetails user,
                         @RequestParam double distance,
@@ -37,7 +37,7 @@ public class HomeController {
         Long userId = user.getId();
 
         // 1. 최근 클릭한 친구 5명 가져오기
-        List<Long> allFriendIds = friendService.getFriendIds(userId);
+        List<KakaoMem> allFriendIds = friendService.getFriendIds(userId);
         List<FriendDto> friends = friendClickService.getTop5Friends(userId, allFriendIds);
 
         // 2. 주변 장소 가져오기
@@ -54,6 +54,16 @@ public class HomeController {
         List<HomePlaceDto> sortedPlaceIds = mainPlaceService.getMainPlaces(userId, placeId,lat, lng);
         return sortedPlaceIds;
     }
+    @GetMapping("/main/comment")
+    public List<HomeCommentDto> homeCOmment(@AuthenticationPrincipal CustomUserDetails user,
+                                            @RequestParam List<Long> placeId,
+                                            @RequestParam int page,
+                                            @RequestParam(defaultValue = "10") int size) {  // size만 사용
 
+        KakaoMem me = kakaoMemRepository.findById(user.getId())
+                .orElseThrow(() -> new RuntimeException("회원 정보를 찾을 수 없습니다."));
+
+        return mainCommentService.homeComment(user, placeId, page, size);
+    }
 }
 

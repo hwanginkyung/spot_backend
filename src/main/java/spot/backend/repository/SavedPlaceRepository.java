@@ -3,6 +3,7 @@ package spot.backend.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 import spot.backend.domain.Place;
 import spot.backend.domain.SavedPlace;
 import spot.backend.login.memberService.domain.KakaoMem;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 
+@Repository
 public interface SavedPlaceRepository extends JpaRepository<SavedPlace, Long> {
     Optional<SavedPlace> findByUserAndPlace(KakaoMem user, Place place);
     List<SavedPlace> findTop2ByPlaceOrderByCreatedAtDesc(Place place);
@@ -20,5 +22,9 @@ public interface SavedPlaceRepository extends JpaRepository<SavedPlace, Long> {
     boolean existsByUserIdAndPlace(Long userId, Place place);
     void deleteByUserIdAndPlaceId(Long userId, Long placeId);
     List<SavedPlace> findByUserIdIn(List<Long> userIds);
+    @Query("SELECT sp FROM SavedPlace sp WHERE sp.user.id = :userId AND sp.place.id IN :placeIds")
+    List<SavedPlace> findByUserIdAndPlaceIds(@Param("userId") Long userId,
+                                             @Param("placeIds") List<Long> placeIds);
+    List<SavedPlace> findByUserId(long userId);
 
 }

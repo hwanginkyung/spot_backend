@@ -36,5 +36,17 @@ import java.util.stream.Collectors;
     public String buildS3PlaceUrl(String photoId) {
         return String.format("https://%s.s3.amazonaws.com/%s", bucketName, photoId);
     }
+    public List<String> getAllImageKeysInFolder(String folder) {
+        ListObjectsV2Request request = ListObjectsV2Request.builder()
+                .bucket(bucketName)
+                .prefix(folder + "/")
+                .build();
+
+        ListObjectsV2Response response = s3Client.listObjectsV2(request);
+
+        return response.contents().stream()
+                .map(S3Object::key)
+                .collect(Collectors.toList());
+    }
 
 }

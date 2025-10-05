@@ -46,5 +46,7 @@ public class KakaoMem extends BaseEntity {
     private List<Friend> followers = new ArrayList<>();
     @OneToMany(mappedBy= "kakaoMem")
     private List<Comment> comment;
+    @OneToMany
+    private List<CommentLike> commentLike;
 
 }

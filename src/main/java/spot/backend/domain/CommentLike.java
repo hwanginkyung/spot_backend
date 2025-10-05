@@ -4,22 +4,15 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import spot.backend.login.memberService.domain.KakaoMem;
 
-import java.util.List;
-
 @Entity
 @Getter
-public class Comment extends BaseEntity {
+public class CommentLike {
     @Id
     @GeneratedValue
-    private Long id;
-    private String content;
-    private String userId;
+    private long id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Comment comment;
     @ManyToOne(fetch = FetchType.LAZY)
     private KakaoMem kakaoMem;
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Place place;
-    @OneToMany
-    private List<Comment> comments;
-
-
+    boolean liked=false;
 }
